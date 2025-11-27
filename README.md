@@ -6,7 +6,7 @@ Flat ESLint config that powers the Fabric Image Editor repo. The package bundles
 
 ```bash
 npm install --save-dev \
-  eslint \
+  eslint@^8.57.1 \
   @anu3ev/eslint-config-fabric \
   @eslint/js \
   @eslint/eslintrc \
@@ -20,6 +20,8 @@ npm install --save-dev \
   typescript \
   vue-eslint-parser
 ```
+
+> **Note**: `eslint-config-airbnb-base@15` only supports ESLint 7/8, so installing the latest ESLint 9 release will trigger `ERESOLVE` errors. Pin ESLint to the latest 8.x version (e.g. `^8.57.1`) or install with `--legacy-peer-deps` if you must keep ESLint 9.
 
 ### Usage
 
