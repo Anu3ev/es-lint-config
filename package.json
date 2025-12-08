@@ -1,15 +1,16 @@
 {
   "name": "@anu3ev/eslint-config-fabric",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Shared ESLint flat config extracted from @anu3ev/fabric-image-editor.",
   "type": "module",
-  "main": "eslint.config.js",
+  "main": "index.js",
   "exports": {
-    ".": "./eslint.config.js"
+    ".": "./index.js"
   },
   "files": [
-    "eslint.config.js",
-    "README.md"
+    "index.js",
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "eslint",
@@ -20,6 +21,14 @@
   ],
   "author": "Anu3ev",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anu3ev/es-lint-config.git"
+  },
+  "homepage": "https://github.com/Anu3ev/es-lint-config#readme",
+  "bugs": {
+    "url": "https://github.com/Anu3ev/es-lint-config/issues"
+  },
   "engines": {
     "node": ">=18.18.0"
   },
