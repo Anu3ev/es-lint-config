@@ -25,12 +25,16 @@ npm install --save-dev \
 
 ### Usage
 
+**Important**: ESLint config file must use `.js` or `.mjs` extension, **not** `.ts`:
+
 ```js
-// eslint.config.js
+// eslint.config.js or eslint.config.mjs
 import createConfig from '@anu3ev/eslint-config-fabric'
 
 export default createConfig()
 ```
+
+> **⚠️ TypeScript config files are not supported**: ESLint 8.x does not natively support `eslint.config.ts`. If you have an `eslint.config.ts` file, rename it to `eslint.config.mjs` or `eslint.config.js`.
 
 If your `tsconfig.json` lives elsewhere, pass custom paths:
 
@@ -40,5 +44,14 @@ export default createConfig({
   tsconfigRootDir: new URL('.', import.meta.url).pathname
 })
 ```
+
+### Troubleshooting
+
+**Error: "No files matching the pattern '.' were found"**
+
+This usually means:
+1. Your config file is named `eslint.config.ts` instead of `.js`/`.mjs` → Rename it to `eslint.config.mjs`
+2. Your config file is in the wrong location → Make sure it's in the project root
+3. ESLint is not finding the config → Try running `npx eslint --debug .` to see what's happening
 
 This repo already consumes the package locally through a `file:` dependency, so you can run `npm publish` from `packages/eslint-config` whenever you're ready to share it publicly.

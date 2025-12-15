@@ -364,6 +364,30 @@ export default function createConfig(options = {}) {
     }
   },
   {
+    files: ['**/*.vue'],
+
+    languageOptions: {
+      parser,
+      parserOptions: {
+        parser: tsParser,
+        project: tsconfigPath,
+        tsconfigRootDir: rootDir,
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        extraFileExtensions: ['.vue']
+      }
+    },
+
+    plugins: {
+      '@typescript-eslint': tsPlugin
+    },
+
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
+    }
+  },
+  {
     files: ['**/*.ts'],
 
     languageOptions: {
