@@ -1,6 +1,6 @@
 {
   "name": "@anu3ev/eslint-config-fabric",
-  "version": "0.1.4",
+  "version": "0.1.8",
   "description": "Shared ESLint flat config extracted from @anu3ev/fabric-image-editor.",
   "type": "module",
   "main": "index.js",
