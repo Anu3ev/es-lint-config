@@ -36,14 +36,15 @@ export default createConfig()
 
 > **⚠️ TypeScript config files are not supported**: ESLint 8.x does not natively support `eslint.config.ts`. If you have an `eslint.config.ts` file, rename it to `eslint.config.mjs` or `eslint.config.js`.
 
-If your `tsconfig.json` lives elsewhere, pass custom paths:
+If your project root is different from the current working directory:
 
 ```js
 export default createConfig({
-  tsconfigPath: './config/tsconfig.lint.json',
   tsconfigRootDir: new URL('.', import.meta.url).pathname
 })
 ```
+
+> **Note**: The package now uses `projectService` instead of `project` for TypeScript parsing, which automatically supports TypeScript project references.
 
 ### Troubleshooting
 

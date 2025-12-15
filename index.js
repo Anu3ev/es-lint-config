@@ -14,19 +14,18 @@ import tsPlugin from '@typescript-eslint/eslint-plugin'
 /**
  * Create ESLint flat config with Vue, TypeScript, and custom rules.
  * @param {Object} options - Configuration options
- * @param {string} [options.tsconfigPath='./tsconfig.json'] - Path to tsconfig.json
- * @param {string} [options.tsconfigRootDir] - Root directory for tsconfig resolution
+ * @param {string} [options.tsconfigRootDir] - Root directory for tsconfig resolution (defaults to process.cwd())
  * @returns {import('eslint').Linter.Config[]} ESLint config array
  */
 export default function createConfig(options = {}) {
   const {
-    tsconfigPath = './tsconfig.json',
     tsconfigRootDir
   } = options
 
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = path.dirname(__filename)
-  const rootDir = tsconfigRootDir || __dirname
+  // Use process.cwd() (user's project root) instead of __dirname (package location)
+  const rootDir = tsconfigRootDir || process.cwd()
 
   const compat = new FlatCompat({
     baseDirectory: __dirname,
@@ -40,9 +39,7 @@ export default function createConfig(options = {}) {
   },
   ...compat.extends(
     'eslint:recommended',
-    'plugin:vue/essential',
-    'plugin:vue/strongly-recommended',
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
     'airbnb-base'
   ),
   {
@@ -54,17 +51,7 @@ export default function createConfig(options = {}) {
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.commonjs,
-        ...globals.jquery,
-        ...globals.amd,
-        ...globals.jest,
-        Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly',
-        I18n: 'readonly',
-        $: 'writable',
-        CodeMirror: 'readonly',
-        self: 'writable',
-        insYmaps: 'readonly',
+        ...globals.es2022,
         process: 'readonly'
       },
 
@@ -186,12 +173,11 @@ export default function createConfig(options = {}) {
       'vue/no-restricted-html-elements': ['warn', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
 
       'vue/no-restricted-syntax': ['warn', {
-        selector: '[name=$parent]'
+        selector: '[name=$parent]',
+        message: 'Avoid using $parent - use props and emits instead'
       }, {
-        selector: '[name=$root]'
-      }, {
-        selector: "VElement[name='ui-text-field'] VDirectiveKey > VIdentifier[name=rules]",
-        message: 'Не используем frontend валидацию'
+        selector: '[name=$root]',
+        message: 'Avoid using $root - use provide/inject or composables instead'
       }],
 
       'vue/attributes-order': ['warn', {
@@ -210,62 +196,15 @@ export default function createConfig(options = {}) {
           'CONTENT',
           'EVENTS'
         ],
-
         alphabetical: false
       }],
 
-      'vue/order-in-components': ['warn', {
-        order: [
-          'el',
-          'name',
-          'key',
-          'parent',
-          'functional',
-          ['delimiters', 'comments'],
-          ['components', 'directives', 'filters'],
-          'extends',
-          'mixins',
-          ['provide', 'inject'],
-          'vueT',
-          'ROUTER_GUARDS',
-          'layout',
-          'middleware',
-          'validate',
-          'scrollToTop',
-          'transition',
-          'loading',
-          'inheritAttrs',
-          'constants',
-          'model',
-          ['props', 'propsData'],
-          'emits',
-          'setup',
-          'asyncData',
-          'data',
-          'fetch',
-          'head',
-          'computed',
-          'watch',
-          'watchQuery',
-          'LIFECYCLE_HOOKS',
-          'methods',
-          ['template', 'render'],
-          'renderError'
-        ]
-      }],
-
       'vue/require-explicit-emits': 'warn',
-
-      'vue/no-unused-properties': ['warn', {
-        groups: ['props', 'data', 'computed', 'methods'],
-        deepData: true,
-        ignorePublicMembers: true
-      }],
-
       'vue/padding-line-between-blocks': ['warn', 'always'],
-      'vue/require-name-property': 'warn',
-      'vue/no-dupe-keys': 'error',
-      'vue/no-deprecated-filter': 'warn',
+      'vue/component-api-style': ['error', ['script-setup']],
+      'vue/block-lang': ['error', {
+        script: { lang: 'ts' }
+      }],
 
       'vue/custom-event-name-casing': ['warn', 'kebab-case', {
         ignores: ['/^[a-z]+(?:-[a-z]+)*:[a-z]+(?:-[a-z]+)*$/u']
@@ -277,9 +216,6 @@ export default function createConfig(options = {}) {
         selector: '[name=$parent]'
       }, {
         selector: '[name=$root]'
-      }, {
-        selector: ":matches(CallExpression[callee.property.name='then'], FunctionExpression[async='true']) CallExpression > MemberExpression[object.name='window'][property.name='open']",
-        message: 'window.open на safari не доступен в асинхронных функциях,вместо этого используем this.$windowOpen'
       }, {
         selector: "IfStatement[test.loc.end.column<40] > BlockStatement[body] > :first-child[type='ReturnStatement'][loc.end.column<35][argument.type!='ObjectExpression'][argument.type!='ConditionalExpression'][argument.type!='ArrayExpression'][argument.type!='CallExpression']",
         message: 'Условие выхода из функции без side-эффектов должно быть без { }'
@@ -370,7 +306,7 @@ export default function createConfig(options = {}) {
       parser,
       parserOptions: {
         parser: tsParser,
-        project: tsconfigPath,
+        projectService: true,
         tsconfigRootDir: rootDir,
         ecmaVersion: 2022,
         sourceType: 'module',
@@ -393,7 +329,7 @@ export default function createConfig(options = {}) {
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: tsconfigPath,
+        projectService: true,
         tsconfigRootDir: rootDir,
         ecmaVersion: 2022,
         sourceType: 'module'
@@ -415,7 +351,7 @@ export default function createConfig(options = {}) {
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: tsconfigPath,
+        projectService: true,
         tsconfigRootDir: rootDir,
         ecmaVersion: 2022,
         sourceType: 'module'
